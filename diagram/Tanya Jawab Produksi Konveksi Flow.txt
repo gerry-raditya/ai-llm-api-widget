@@ -1,0 +1,11 @@
+title  Tanya Jawab Produksi Konveksi
+Client->Widget: User sends question
+Widget->API: POST /api/agent { clientId, message }
+API->IntentService: Detect intent (QA_PRODUKSI)
+IntentService->ProductionQaService: getProductionFlow(clientId)
+ProductionQaService->Database: SELECT production_process...
+Database-->ProductionQaService: result rows
+ProductionQaService-->AIExplainService: explain with JSON
+AIExplainService-->API: composed answer text
+API-->Widget: reply
+Widget-->Client: show answer

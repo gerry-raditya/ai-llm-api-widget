@@ -1,0 +1,15 @@
+title Flow Ai Customer
+participant Widget Chat
+participant API AI
+participant Gemini/OpenAI/Ollama
+participant Database Working Tools
+
+Widget Chat->API AI:Kirim kan chat message
+API AI->Gemini/OpenAI/Ollama: hit api 
+Gemini/OpenAI/Ollama->Database Working Tools: cek data yang tersedia
+note right of Gemini/OpenAI/Ollama: membaca database dan column yang tersedia dan membuat nya sebagai dataset
+Database Working Tools-->Gemini/OpenAI/Ollama: Olah Dataset
+Gemini/OpenAI/Ollama-->API AI: result feedback
+API AI-->Widget Chat:result feedback
+
+

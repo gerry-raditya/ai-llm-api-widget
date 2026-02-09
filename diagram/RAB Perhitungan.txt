@@ -1,0 +1,10 @@
+title  RAB Perhitungan
+Client->Widget: "Hitung RAB 200 hoodie"
+Widget->API: POST /api/agent { clientId, message }
+API->RABService: calculate RAB
+RABService->Database: fetch material & price
+Database-->RABService: material data
+RABService-->AIExplainService: describe RAB result
+AIExplainService-->API: reply
+API-->Widget: reply
+Widget-->Client: show result

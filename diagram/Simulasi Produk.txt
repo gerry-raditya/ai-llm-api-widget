@@ -1,0 +1,11 @@
+title  Simulasi Produk
+Client->Widget: "Simulasi biaya & waktu"
+Widget->API: POST /api/agent { clientId, message}
+API->IntentService: Detect intent (SIMULASI)
+IntentService->SimulationService: getLastSimulation(clientId)
+SimulationService->Database: SELECT last simulation...
+Database-->SimulationService: simulation data
+SimulationService-->AIExplainService: generate description
+AIExplainService-->API: reply
+API-->Widget: reply
+Widget-->Client: show simulation
