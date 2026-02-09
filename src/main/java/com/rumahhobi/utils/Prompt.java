@@ -2,6 +2,11 @@ package com.rumahhobi.utils;
 
 public class Prompt {
 
+    public static final String LANG_ID = """
+            Gunakan Bahasa Indonesia yang jelas dan profesional.
+            Jangan gunakan bahasa Inggris.
+            """;
+
     public static final String BASE_SYSTEM = """
             ATURAN MUTLAK:
             - Semua jawaban WAJIB menggunakan Bahasa Indonesia.

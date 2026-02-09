@@ -22,67 +22,43 @@ public class GeminiProvider implements AiProvider {
     @ConfigProperty(name = "gemini.api-key")
     String apiKey;
 
-    private static final String NORMAL_MODEL = "models/gemini-3-flash-preview";
-    private static final String THINK_MODEL  = "models/gemini-1.5-pro";
+    // private static final String NORMAL_MODEL = "models/gemini-3-flash-preview";
+    // private static final String THINK_MODEL = "models/gemini-1.5-pro";
 
     @Override
     public String generate(String prompt, String context) {
-        return call(NORMAL_MODEL, prompt, context, "low");
+        return call("gemini-3-flash-preview", prompt, context, false);
     }
 
     @Override
     public String generateThink(String prompt, String context) {
-        return call(THINK_MODEL, prompt, context, "high");
+        return call("gemini-1.5-pro", prompt, context, true);
     }
 
-    private String call(String model, String prompt, String context, String thinking) {
-
-        // ======================
-        // SYSTEM + CONTEXT
-        // ======================
-        String fullPrompt =
-            Prompt.BASE_SYSTEM + "\n\n" +
-            (context != null ? context : "") +
-            "\n\nPertanyaan user:\n" + prompt;
-
-        // ======================
-        // CONTENT
-        // ======================
-        GeminiOas.Part part = new GeminiOas.Part();
-        part.text = fullPrompt;
-
-        GeminiOas.Content content = new GeminiOas.Content();
-        content.parts = List.of(part);
+    private String call(String model, String prompt, String context, boolean thinking) {
 
         GeminiOas.Request req = new GeminiOas.Request();
-        req.contents = List.of(content);
 
-        // ======================
-        // THINKING CONFIG
-        // ======================
-        GeminiOas.ThinkingConfig tc = new GeminiOas.ThinkingConfig();
-        tc.thinkingLevel = thinking;
+        GeminiOas.Part p = new GeminiOas.Part();
+        p.text = Prompt.LANG_ID + "\n\n" + context + "\nUser: " + prompt;
 
-        GeminiOas.GenerationConfig gc = new GeminiOas.GenerationConfig();
-        gc.thinkingConfig = tc;
+        GeminiOas.Content c = new GeminiOas.Content();
+        c.parts = List.of(p);
+        req.contents = List.of(c);
 
-        req.generationConfig = gc;
-
-        // ======================
-        // CALL
-        // ======================
-        GeminiOas.Response res =
-            client.generateContent(model, req, apiKey);
-
-        if (res == null
-            || res.candidates == null
-            || res.candidates.isEmpty()
-            || res.candidates.get(0).content == null
-            || res.candidates.get(0).content.parts == null
-            || res.candidates.get(0).content.parts.isEmpty()) {
-            throw new RuntimeException("Gemini response kosong / tidak valid");
+        // ⚠️ HANYA kirim generationConfig jika perlu
+        if (thinking) {
+            GeminiOas.GenerationConfig gc = new GeminiOas.GenerationConfig();
+            GeminiOas.ThinkingConfig tc = new GeminiOas.ThinkingConfig();
+            tc.thinkingLevel = "low"; // jangan high dulu
+            gc.thinkingConfig = tc;
+            req.generationConfig = gc;
         }
 
-        return res.candidates.get(0).content.parts.get(0).text;
+        GeminiOas.Response res = client.generateContent("models/" + model, req, apiKey);
+
+        return res.candidates
+                .get(0).content.parts
+                .get(0).text;
     }
 }
