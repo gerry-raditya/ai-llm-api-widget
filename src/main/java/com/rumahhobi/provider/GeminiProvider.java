@@ -20,8 +20,8 @@ public class GeminiProvider implements AiProvider {
             .build();
     }
 
-    private static final String NORMAL_MODEL = "gemini-1.5-flash";
-    private static final String THINK_MODEL  = "gemini-1.5-pro";
+    private static final String NORMAL_MODEL = "models/gemini-1.5-flash";
+    private static final String THINK_MODEL = "models/gemini-1.5-pro";
     // alternatif: "gemini-2.0-flash-thinking"
 
     @Override

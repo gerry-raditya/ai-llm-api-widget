@@ -18,7 +18,7 @@ public class OllamaProvider implements AiProvider {
     @ConfigProperty(name = "ollama.base-url")
     String baseUrl;
 
-    @ConfigProperty(name = "ollama.model", defaultValue = "llama3")
+    @ConfigProperty(name = "ollama.model", defaultValue = "qwen2.5:7b-instruct")
     String model;
 
     @Inject
