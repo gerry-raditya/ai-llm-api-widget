@@ -21,7 +21,7 @@ public class GeminiProvider implements AiProvider {
     }
 
     private static final String NORMAL_MODEL = "gemini-1.5-flash";
-    private static final String THINK_MODEL  = "gemini-3-flash-preview";
+    private static final String THINK_MODEL  = "gemini-1.5-pro";
     // alternatif: "gemini-2.0-flash-thinking"
 
     @Override

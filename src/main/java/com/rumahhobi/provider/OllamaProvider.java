@@ -45,9 +45,19 @@ public class OllamaProvider implements AiProvider {
 
             HttpResponse<String> response =
                 client.send(request, HttpResponse.BodyHandlers.ofString());
+            
+            if (response.statusCode() != 200) {
+                throw new RuntimeException(
+                        "Ollama HTTP " + response.statusCode() + ": " + response.body());
+            }
 
             JsonNode json = mapper.readTree(response.body());
-            return json.get("response").asText();
+
+            if (json.has("error")) {
+                throw new RuntimeException("Ollama error: " + json.get("error").asText());
+            }
+
+            return json.path("response").asText();
 
         } catch (Exception e) {
             throw new RuntimeException("Ollama error", e);
