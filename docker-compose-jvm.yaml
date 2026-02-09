@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+  ai-agent:
+    build:
+      context: .
+      dockerfile: src/main/docker/Dockerfile.jvm
+    container_name: ai-agent
+    ports:
+      - "8080:8080"
+    environment:
+      QUARKUS_PROFILE: prod
+
+      # ===== OLLAMA =====
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_MODEL: qwen2.5:7b-instruct
+
+      # ===== GEMINI =====
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+
+      # ===== JVM TUNING =====
+      JAVA_OPTS: >
+        -Xms256m
+        -Xmx1024m
+        -XX:+UseG1GC
+
+    restart: always
+    networks:
+        - cloudflare_networks
+        - ai-network
+    env_file:
+        - .env
+
+networks:
+  ai-network:
+    driver: bridge
+    name: ai-network
+  cloudflare_networks:
+    external: true
+
+volumes:
+  ollama-data:
