@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  ai-customer-agent:
+    image: quarkus/ai-customer-agent
+    container_name: ai-customer-agent
+    build:
+      context: .
+      dockerfile: src/main/docker/Dockerfile.native
+    ports:
+      - "8080:8080"
+    environment:
+      QUARKUS_HTTP_HOST: 0.0.0.0
+      QUARKUS_HTTP_PORT: 8080
+    restart: unless-stopped
+    networks:
+      - ai-network
+      - cloudflare_networks
+    env_file:
+      - .env
+networks:
+  ai-network:
+    driver: bridge
+    name: ai-network
+  cloudflare_networks:
+    external: true
